@@ -1,10 +1,14 @@
 import 'package:animations/animations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teskura/screens/items_list_screen.dart';
 import 'package:teskura/widgets/list_card.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String id = "homeScreen";
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -27,7 +31,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 30.0),
               child: CircleAvatar(
-                backgroundColor: Colors.blue,
+                child: Image.network(_auth.currentUser.photoURL),
                 radius: 40.0,
               ),
             ),
@@ -35,7 +39,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 30.0),
               child: Text(
-                'Hello',
+                'Hello ${_auth.currentUser.displayName}',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 35.0,

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:teskura/constants.dart';
-import 'package:teskura/screens/login_screen.dart';
+import 'package:teskura/services/googleAuth.dart';
 import 'package:teskura/widgets/custom_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -35,7 +35,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: CustomButton(
                     text: 'Login',
                     onPressed: () {
-                      Navigator.pushNamed(context, LoginScreen.id);
+                      signInWithGoogle();
                     },
                     buttonColor: kCustomGreenColor,
                     fontColor: Colors.white,

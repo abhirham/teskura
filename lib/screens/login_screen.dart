@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teskura/constants.dart';
 import 'package:teskura/screens/container_screen.dart';
@@ -70,7 +71,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 tag: 'loginButton',
                 child: CustomButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, ContainerScreen.id);
+//                    Navigator.pushNamed(context, ContainerScreen.id);
+                    FirebaseAuth.instance.signInAnonymously();
                   },
                   buttonColor: kCustomGreenColor,
                   text: 'Login',
