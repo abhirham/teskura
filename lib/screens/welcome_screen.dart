@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:teskura/constants.dart';
-import 'package:teskura/services/googleAuth.dart';
+import 'package:teskura/services/auth.dart';
 import 'package:teskura/widgets/custom_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
   static const String id = "welcomeScreen";
+
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
                   child: CustomButton(
                     text: 'Login',
                     onPressed: () {
-                      signInWithGoogle();
+                      _auth.signInWithGoogle();
                     },
                     buttonColor: kCustomGreenColor,
                     fontColor: Colors.white,

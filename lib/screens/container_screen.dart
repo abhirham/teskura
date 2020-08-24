@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:teskura/constants.dart';
 import 'package:teskura/screens/home_screen.dart';
 import 'package:teskura/screens/settings_screen.dart';
+import 'package:teskura/services/auth.dart';
 
 class ContainerScreen extends StatelessWidget {
   static const String id = 'containerScreen';
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,9 @@ class ContainerScreen extends StatelessWidget {
         child: Scaffold(
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () {
+              _auth.signOut();
+            },
           ),
           bottomNavigationBar: TabBar(
             indicatorColor: kCustomGreenColor,

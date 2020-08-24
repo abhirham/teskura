@@ -1,13 +1,33 @@
 import 'package:animations/animations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:teskura/screens/items_list_screen.dart';
+import 'package:teskura/services/db.dart';
 import 'package:teskura/widgets/list_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const String id = "homeScreen";
 
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DbService _db = DbService();
+
+  List<QueryDocumentSnapshot> rooms = [];
+
+  @override
+  void initState() {
+    _db.fetchRooms(_auth.currentUser.uid).then((value) {
+      setState(() {
+        rooms = value.docs;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,16 +70,17 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               height: 300.0,
               child: ListView.separated(
-                itemCount: 7,
+                itemCount: rooms.length + 1,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (_, index) {
                   if (index == 0) {
                     return SizedBox(width: 20.0);
                   }
+
                   return OpenContainer(
                     transitionType: ContainerTransitionType.fade,
                     openBuilder: (context, _) => ItemsListScreen(),
-                    closedBuilder: (context, _) => ListCard(),
+                    closedBuilder: (context, _) => ListCard(rooms[index - 1]),
                   );
                 },
                 separatorBuilder: (_, __) => SizedBox(width: 15),

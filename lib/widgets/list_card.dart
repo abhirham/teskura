@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ListCard extends StatelessWidget {
+  final QueryDocumentSnapshot room;
+
+  ListCard(this.room);
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -14,7 +19,7 @@ class ListCard extends StatelessWidget {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: <Widget>[
-              Text('Personal'),
+              Text(room.data()['name']),
               Spacer(),
               Text('10 Items'),
               Spacer(),
