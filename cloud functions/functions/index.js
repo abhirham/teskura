@@ -10,5 +10,5 @@ admin.initializeApp();
 // });
 
 exports.createPersonalRoomForUser = functions.auth.user().onCreate(user => {
-    admin.firestore().collection('rooms').add({users: [user.uid], name: 'Personal'});
+    return admin.firestore().collection('rooms').add({users: [user.uid], name: 'Personal'}).then(() => true).catch(e => console.log(e));
 })
