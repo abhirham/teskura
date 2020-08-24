@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "89802317081",
+    "firebase_url": "https://groceries-8a6f0.firebaseio.com",
+    "project_id": "groceries-8a6f0",
+    "storage_bucket": "groceries-8a6f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:89802317081:android:0051a3fb532629cbc13988",
+        "android_client_info": {
+          "package_name": "com.snag.alpha.teskura"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "89802317081-pv33km8nu96vfqg6t2tum6c21gbsh7id.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb9XXK0TIBoc-cMesZGog1aJlXPFkUyQs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "89802317081-pv33km8nu96vfqg6t2tum6c21gbsh7id.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
