@@ -1,23 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:teskura/constants.dart';
-import 'package:teskura/screens/container_screen.dart';
-import 'package:teskura/widgets/custom_button.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
+import 'package:teskura/services/auth.dart';
 
 const TextStyle textStyle = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 15,
 );
 
-class LoginScreen extends StatefulWidget {
-  static final String id = "loginScreen";
+class LoginScreen extends StatelessWidget {
+  static String id = "loginScreen";
 
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  bool rememberMe = false;
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -29,81 +23,14 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                'Login',
-                style: TextStyle(
-                  fontSize: 35.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  hintText: 'Username',
-                ),
-              ),
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  Checkbox(
-                    value: rememberMe,
-                    activeColor: kCustomGreenColor,
-                    onChanged: (val) {
-                      setState(() {
-                        rememberMe = val;
-                      });
-                    },
-                  ),
-                  Text('Remember Me', style: textStyle),
-                  Spacer(),
-                  Text('Forgot password?', style: textStyle)
-                ],
-              ),
-              Hero(
-                tag: 'loginButton',
-                child: CustomButton(
+              Center(
+                child: SignInButton(
+                  Buttons.Google,
                   onPressed: () {
-//                    Navigator.pushNamed(context, ContainerScreen.id);
-                    FirebaseAuth.instance.signInAnonymously();
+                    _auth.signInWithGoogle();
                   },
-                  buttonColor: kCustomGreenColor,
-                  text: 'Login',
-                  fontColor: Colors.white,
                 ),
               ),
-              SizedBox(
-                height: 15.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Dont have an account?',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      color: kCustomGreenColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              )
             ],
           ),
         ));

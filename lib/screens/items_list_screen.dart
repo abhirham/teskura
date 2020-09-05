@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:teskura/constants.dart';
-import 'package:teskura/data/tasks.dart';
+import 'package:teskura/data/data.dart';
+import 'package:teskura/utilities/constants.dart';
+import 'package:teskura/models/item.dart';
+import 'package:teskura/models/room.dart';
+import 'package:teskura/services/db.dart';
 
 class ItemsListScreen extends StatefulWidget {
+  final Room room;
+
+  ItemsListScreen(this.room);
+
   @override
   _ItemsListScreenState createState() => _ItemsListScreenState();
 }
 
 class _ItemsListScreenState extends State<ItemsListScreen> {
+  @override
+  void initState() {
+    context.read<Data>().selectedRoom = widget.room;
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,42 +41,86 @@ class _ItemsListScreenState extends State<ItemsListScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Consumer<Tasks>(
-          builder: (_, itemsData, __) {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: itemsData.itemCount,
-              itemBuilder: (_, index) {
-                if (index == itemsData.itemCount) {
-                  return Divider(
-                    thickness: 1,
-                  );
-                }
-                if (index == itemsData.itemCount + 1) {
-                  return Center(child: Text('History'));
-                }
-
-                if (index > itemsData.itemCount) {
-                  return ListTile(
-                    leading: Icon(Icons.receipt),
-                    title: Text('10 Dec 1994'),
-                    onTap: () {},
-                  );
-                }
-
-                return CheckboxListTile(
-                  value: itemsData.items[index].completed,
-                  title: Text(itemsData.items[index].title),
-                  onChanged: (val) {
-                    itemsData.updateItem(itemsData.items[index],
-                        !itemsData.items[index].completed);
-                  },
-                );
-              },
-            );
-          },
-        ),
+        child: ListViewWrapper(),
       ),
+    );
+  }
+}
+
+class ListViewWrapper extends StatefulWidget {
+  @override
+  _ListViewWrapperState createState() => _ListViewWrapperState();
+}
+
+class _ListViewWrapperState extends State<ListViewWrapper> {
+  final DbService _db = DbService();
+  Room _room;
+
+  @override
+  void initState() {
+    setState(() {
+      _room = context.read<Data>().selectedRoom;
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_room.name == "Personal") {
+      return RenderPersonalList();
+    }
+
+    return StreamProvider<List<Item>>.value(
+      initialData: [],
+      value: _db.fetchItemsStream(_room.id),
+      child: Consumer<List<Item>>(
+        builder: (_, itemsList, __) => ItemsList(itemsList),
+      ),
+    );
+  }
+}
+
+class RenderPersonalList extends StatefulWidget {
+  @override
+  _RenderPersonalListState createState() => _RenderPersonalListState();
+}
+
+class _RenderPersonalListState extends State<RenderPersonalList> {
+  @override
+  void initState() {
+    context.read<Data>().fetchItems(context.read<Data>().selectedRoom.id);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<Data>(
+      builder: (_, data, __) {
+        return ItemsList(data.itemsList);
+      },
+    );
+  }
+}
+
+class ItemsList extends StatelessWidget {
+  final List<Item> itemsList;
+
+  ItemsList(this.itemsList);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: itemsList.length,
+      itemBuilder: (_, index) {
+        return CheckboxListTile(
+          value: itemsList[index].pickedUp,
+          title: Text(itemsList[index].name),
+          onChanged: (val) {
+            context.read<Data>().updateItem(itemsList[index], val);
+          },
+        );
+      },
     );
   }
 }

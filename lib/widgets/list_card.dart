@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:teskura/models/room.dart';
 
 class ListCard extends StatelessWidget {
-  final QueryDocumentSnapshot room;
+  final Room room;
 
   ListCard(this.room);
 
@@ -19,7 +19,7 @@ class ListCard extends StatelessWidget {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: <Widget>[
-              Text(room.data()['name']),
+              Text(room.name),
               Spacer(),
               Text('10 Items'),
               Spacer(),

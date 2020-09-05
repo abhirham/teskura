@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:teskura/constants.dart';
+import 'package:teskura/utilities/constants.dart';
 import 'package:teskura/services/auth.dart';
 import 'package:teskura/widgets/custom_button.dart';
 

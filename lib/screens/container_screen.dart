@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teskura/constants.dart';
+import 'package:teskura/utilities/constants.dart';
 import 'package:teskura/screens/home_screen.dart';
 import 'package:teskura/screens/settings_screen.dart';
 import 'package:teskura/services/auth.dart';

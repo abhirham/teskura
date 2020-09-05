@@ -1,9 +1,9 @@
 import 'package:animations/animations.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:teskura/data/data.dart';
 import 'package:teskura/screens/items_list_screen.dart';
-import 'package:teskura/services/db.dart';
 import 'package:teskura/widgets/list_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,18 +14,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final DbService _db = DbService();
-
-  List<QueryDocumentSnapshot> rooms = [];
+  final User _user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
-    _db.fetchRooms(_auth.currentUser.uid).then((value) {
-      setState(() {
-        rooms = value.docs;
-      });
-    });
+    context.read<Data>().fetchRooms(uid: _user.uid);
     super.initState();
   }
 
@@ -51,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 30.0),
               child: CircleAvatar(
-                child: Image.network(_auth.currentUser.photoURL),
+                child: Image.network(_user.photoURL),
                 radius: 40.0,
               ),
             ),
@@ -59,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 30.0),
               child: Text(
-                'Hello ${_auth.currentUser.displayName}',
+                'Hello ${_user.displayName}',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 35.0,
@@ -69,21 +62,31 @@ class _HomeScreenState extends State<HomeScreen> {
             Spacer(),
             SizedBox(
               height: 300.0,
-              child: ListView.separated(
-                itemCount: rooms.length + 1,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (_, index) {
-                  if (index == 0) {
-                    return SizedBox(width: 20.0);
-                  }
+              child: Consumer<Data>(
+                builder: (_, data, __) => ListView.separated(
+                  itemCount: data.rooms.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (_, index) {
+                    final child = OpenContainer(
+                      transitionType: ContainerTransitionType.fade,
+                      openBuilder: (context, _) {
+                        return ItemsListScreen(data.rooms[index]);
+                      },
+                      closedBuilder: (context, _) =>
+                          ListCard(data.rooms[index]),
+                    );
 
-                  return OpenContainer(
-                    transitionType: ContainerTransitionType.fade,
-                    openBuilder: (context, _) => ItemsListScreen(),
-                    closedBuilder: (context, _) => ListCard(rooms[index - 1]),
-                  );
-                },
-                separatorBuilder: (_, __) => SizedBox(width: 15),
+                    if (index == 0) {
+                      return Padding(
+                        padding: EdgeInsets.only(left: 30.0),
+                        child: child,
+                      );
+                    }
+
+                    return child;
+                  },
+                  separatorBuilder: (_, __) => SizedBox(width: 15),
+                ),
               ),
             )
           ],
